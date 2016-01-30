@@ -1,14 +1,9 @@
-// Sample pdnsd configuration file. Must be customized to obtain a working pdnsd setup!
-// Read the pdnsd.conf(5) manpage for an explanation of the options.
-// Add or remove '#' in front of options you want to disable or enable, respectively.
-// Remove '/*' and '*/' to enable complete sections.
-
 global {
 	perm_cache=2048;
 	cache_dir="@cachedir@";
 #	pid_file = /var/run/pdnsd.pid;
 	run_as="@def_id@";
-	server_ip = 127.0.0.1;  # Use eth0 here if you want to allow other
+	server_ip = 0.0.0.0;  # Use eth0 here if you want to allow other
 	server_port = 1053;			# machines on your network to query pdnsd.
 	status_ctl = on;
 #	paranoid=on;       # This option reduces the chance of cache poisoning
@@ -30,19 +25,13 @@ global {
 server {
 	label = "opendns";
 	ip = 208.67.222.222;
-	port = 443;
-	#208.67.220.220;
-	reject = 208.69.32.0/24,  # You may need to add additional address ranges
-	         208.69.34.0/24,  # here if the addresses of their search engines
-	         208.67.219.0/24; # change.
-	reject_policy = fail;     # If you do not provide any alternative server
-	                          # sections, like the following root-server
-	                          # example, "negate" may be more appropriate here.
+
 	timeout = 4;
-	uptest = ping;            # Test availability using ICMP echo requests.
-        ping_timeout = 100;       # ping test will time out after 10 seconds.
+	uptest = none;            # Test availability using ICMP echo requests.
 	interval = 15m;           # Test every 15 minutes.
-	preset = off;
+	interface = eth0;
+	purge_cache = off;
+	edns_query = on; 
 }
 
 
